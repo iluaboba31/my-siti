@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BotForge - Запуск в 2026</title>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        }
+        
+        body { 
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
+            color: #f1f5f9; 
+            line-height: 1.6; 
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* ШАПКА */
+        .header { 
+            background: rgba(15, 23, 42, 0.95); 
+            padding: 1.5rem 2rem; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            position: fixed; 
+            width: 100%; 
+            top: 0; 
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        
+        .logo { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            text-decoration: none;
+        }
+        
+        .logo-icon { 
+            width: 50px; 
+            height: 50px; 
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); 
+            color: white; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 800; 
+            border-radius: 12px; 
+            font-size: 22px;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+        }
+        
+        .logo-text { 
+            font-size: 1.8rem; 
+            font-weight: 900; 
+            color: #f1f5f9;
+            letter-spacing: 1.5px;
+        }
+        
+        .year-badge {
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-left: 15px;
+            animation: shine 2s infinite;
+        }
+        
+        @keyframes shine {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .nav a { 
+            margin-left: 1.5rem; 
+            text-decoration: none; 
+            color: #cbd5e1; 
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+        
+        .nav a:hover { 
+            color: #8b5cf6; 
+            background: rgba(99, 102, 241, 0.1);
+        }
+        
+        /* ГЛАВНЫЙ БАННЕР */
+        .hero { 
+            padding: 180px 2rem 100px; 
+            text-align: center; 
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(245, 158, 11, 0.1) 0%, transparent 50%);
+            z-index: 1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 { 
+            font-size: 4.5rem; 
+            margin-bottom: 1.5rem; 
+            background: linear-gradient(90deg, #8b5cf6, #6366f1, #ec4899, #8b5cf6);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 900;
+            letter-spacing: 2px;
+            animation: gradient 3s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .hero-subtitle { 
+            font-size: 2.2rem; 
+            margin-bottom: 2rem; 
+            color: #cbd5e1;
+            font-weight: 300;
+            letter-spacing: 3px;
+        }
+        
+        .launch-date {
+            font-size: 1.5rem;
+            color: #f59e0b;
+            font-weight: 700;
+            margin: 2rem 0;
+            padding: 1rem 2rem;
+            background: rgba(245, 158, 11, 0.1);
+            border-radius: 50px;
+            display: inline-block;
+            border: 2px solid rgba(245, 158, 11, 0.3);
+        }
+        
+        .hero-tagline {
+            font-size: 1.3rem;
+            color: #94a3b8;
+            margin-bottom: 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.8;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(30, 41, 59, 0.7);
+            padding: 15px 25px;
+            border-radius: 50px;
+            margin: 2rem 0;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            background: #f59e0b;
+            border-radius: 50%;
+            animation: blink 1.5s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        .cta-button { 
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); 
+            color: white; 
+            padding: 20px 50px; 
+            border-radius: 15px; 
+            text-decoration: none; 
+            font-weight: 700; 
+            font-size: 1.3rem; 
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+            margin: 15px;
+        }
+        
+        .cta-button:hover { 
+            transform: translateY(-5px) scale(1.05); 
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.6);
+        }
+        
+        .tg-button { 
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #0088cc 0%, #00b2ff 100%); 
+            color: white; 
+            padding: 20px 50px; 
+            border-radius: 15px; 
+            text-decoration: none; 
+            font-weight: 700; 
+            font-size: 1.3rem; 
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 136, 204, 0.4);
+            margin: 15px;
+        }
+        
+        .tg-button:hover { 
+            transform: translateY(-5px) scale(1.05); 
+            box-shadow: 0 20px 40px rgba(0, 136, 204, 0.6);
+        }
+        
+        /* СЕКЦИЯ СТРОИТЕЛЬСТВА */
+        .construction {
+            padding: 120px 2rem;
+            background: rgba(15, 23, 42, 0.7);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .construction::before {
+            content: '🚧';
+            position: absolute;
+            font-size: 15rem;
+            opacity: 0.05;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
+        
+        .construction-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 3rem 0;
+            position: relative;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #8b5cf6, #ec4899, #f59e0b);
+            z-index: 1;
+        }
+        
+        .timeline-point {
+            background: #0f172a;
+            padding: 1rem;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            position: relative;
+            z-index: 2;
+            border: 3px solid;
+        }
+        
+        .point-1 { border-color: #8b5cf6; color: #8b5cf6; }
+        .point-2 { border-color: #ec4899; color: #ec4899; }
+        .point-3 { border-color: #f59e0b; color: #f59e0b; }
+        .point-4 { border-color: #10b981; color: #10b981; }
+        
+        .warning-card {
+            background: rgba(245, 158, 11, 0.1);
+            border: 2px solid rgba(245, 158, 11, 0.3);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin: 3rem 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .warning-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* ПРЕДЗАКАЗ - УПРОЩЕННАЯ ВЕРСИЯ */
+        .preorder {
+            padding: 120px 2rem;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+        
+        .preorder-card {
+            background: rgba(30, 41, 59, 0.8);
+            padding: 3rem;
+            border-radius: 25px;
+            max-width: 700px;
+            margin: 0 auto;
+            border: 2px solid rgba(99, 102, 241, 0.3);
+            box-shadow: 0 20px 50px rgba(99, 102, 241, 0.2);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+        
+        .preorder-badge {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        
+        .telegram-template {
+            background: rgba(15, 23, 42, 0.7);
+            border: 2px solid rgba(0, 136, 204, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            color: #cbd5e1;
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+        
+        .template-placeholder {
+            background: rgba(245, 158, 11, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #f59e0b;
+            font-style: italic;
+        }
+        
+        .copy-button {
+            background: rgba(99, 102, 241, 0.2);
+            color: #8b5cf6;
+            border: 2px solid #8b5cf6;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 1rem 0.5rem;
+            transition: all 0.3s;
+        }
+        
+        .copy-button:hover {
+            background: #8b5cf6;
+            color: white;
+        }
+        
+        /* РАБОТА В КОМАНДЕ */
+        .career {
+            padding: 120px 2rem;
+            background: rgba(15, 23, 42, 0.9);
+        }
+        
+        .career-card {
+            background: rgba(30, 41, 59, 0.8);
+            padding: 3rem;
+            border-radius: 25px;
+            max-width: 800px;
+            margin: 0 auto;
+            border: 2px solid rgba(34, 197, 94, 0.3);
+            box-shadow: 0 20px 50px rgba(34, 197, 94, 0.1);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+        
+        .career-icon {
+            font-size: 4rem;
+            color: #22c55e;
+            margin-bottom: 1.5rem;
+        }
+        
+        .join-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            padding: 20px 50px;
+            border-radius: 15px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.3rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(34, 197, 94, 0.4);
+            margin-top: 2rem;
+        }
+        
+        .join-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(34, 197, 94, 0.6);
+        }
+        
+        /* КОНТАКТЫ */
+        .contacts {
+            padding: 100px 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+        
+        .contact-card {
+            background: rgba(30, 41, 59, 0.8);
+            padding: 2.5rem;
+            border-radius: 20px;
+            max-width: 500px;
+            margin: 2rem auto;
+            border: 2px solid rgba(0, 136, 204, 0.3);
+            box-shadow: 0 15px 35px rgba(0, 136, 204, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        /* ПОДВАЛ */
+        .footer { 
+            background: #0f172a; 
+            color: #cbd5e1; 
+            padding: 3rem 2rem; 
+            text-align: center; 
+            border-top: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-tagline {
+            color: #8b5cf6;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+        }
+        
+        .copyright {
+            color: #64748b;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+        }
+        
+        /* АДАПТИВНОСТЬ */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 3rem; }
+            .hero-subtitle { font-size: 1.6rem; }
+            .nav { display: none; }
+            .cta-button, .tg-button, .join-button { 
+                display: block; 
+                width: 90%; 
+                margin: 15px auto;
+                text-align: center;
+                justify-content: center;
+            }
+            .timeline {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            .timeline::before {
+                display: none;
+            }
+            .construction::before {
+                font-size: 10rem;
+            }
+            .preorder-card, .career-card {
+                padding: 2rem;
+                margin: 0 1rem;
+            }
+            .telegram-template {
+                font-size: 0.9rem;
+                padding: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                padding: 1rem;
+            }
+            .logo-text {
+                font-size: 1.4rem;
+            }
+            .hero {
+                padding: 150px 1rem 60px;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .hero-subtitle {
+                font-size: 1.3rem;
+            }
+            .construction, .preorder, .career, .contacts {
+                padding: 60px 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ШАПКА -->
+    <header class="header">
+        <a href="#" class="logo">
+            <div class="logo-icon">BF</div>
+            <div class="logo-text">BOTFORGE</div>
+            <div class="year-badge">2026</div>
+        </a>
+        <nav class="nav">
+            <a href="#construction">Дорожная карта</a>
+            <a href="#preorder">Предзаказ</a>
+            <a href="#career">Карьера</a>
+            <a href="#contacts">Контакты</a>
+        </nav>
+    </header>
+
+    <!-- ГЛАВНЫЙ БАННЕР -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>BOTFORGE</h1>
+            <div class="hero-subtitle">SOCIAL BOT SOLUTIONS</div>
+            
+            <div class="launch-date">🚀 Запуск запланирован на 2026 год</div>
+            
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span>Активная разработка • Публичный запуск в 2026</span>
+            </div>
+            
+            <p class="hero-tagline">
+                Мы создаем следующее поколение инструментов автоматизации бизнеса. 
+                Пока мы строим будущее, вы можете зарезервировать доступ или присоединиться к команде создателей.
+            </p>
+            
+            <div>
+                <a href="#preorder" class="cta-button">
+                    📝 Забронировать ранний доступ
+                </a>
+                <a href="#contacts" class="tg-button">
+                    📱 Связаться в Telegram
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ДОРОЖНАЯ КАРТА -->
+    <section id="construction" class="construction">
+        <div class="construction-content">
+            <h2 style="font-size: 2.8rem; margin-bottom: 1rem; color: #f1f5f9;">Наша дорожная карта</h2>
+            <p style="font-size: 1.2rem; color: #94a3b8; margin-bottom: 2rem;">
+                Мы проходим путь от идеи к реализации. Вот наш план на 2026 год:
+            </p>
+            
+            <div class="timeline">
+                <div class="timeline-point point-1">Q1 2026</div>
+                <div class="timeline-point point-2">Q2 2026</div>
+                <div class="timeline-point point-3">Q3 2026</div>
+                <div class="timeline-point point-4">Q4 2026</div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin: 3rem 0;">
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; color: #8b5cf6; margin-bottom: 1rem;">🧪</div>
+                    <h3 style="color: #8b5cf6;">Бета-тестирование</h3>
+                    <p style="color: #cbd5e1;">Закрытое тестирование с первыми партнерами</p>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; color: #ec4899; margin-bottom: 1rem;">🚀</div>
+                    <h3 style="color: #ec4899;">Публичный запуск</h3>
+                    <p style="color: #cbd5e1;">Открытие платформы для всех пользователей</p>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; color: #f59e0b; margin-bottom: 1rem;">🔧</div>
+                    <h3 style="color: #f59e0b;">Новые интеграции</h3>
+                    <p style="color: #cbd5e1;">Добавление поддержки новых сервисов</p>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; color: #10b981; margin-bottom: 1rem;">🌍</div>
+                    <h3 style="color: #10b981;">Глобальное развитие</h3>
+                    <p style="color: #cbd5e1;">Расширение функционала и рынков</p>
+                </div>
+            </div>
+            
+            <div class="warning-card">
+                <div class="warning-icon">⏳</div>
+                <h3 style="color: #f59e0b; margin-bottom: 1rem; font-size: 1.8rem;">Текущий статус: Активная разработка</h3>
+                <p style="color: #cbd5e1; font-size: 1.1rem; line-height: 1.7;">
+                    <strong>Коммерческие услуги временно недоступны.</strong><br>
+                    Мы полностью сосредоточены на создании инновационной платформы для автоматизации бизнеса 
+                    с использованием технологий n8n, Make и других low-code решений.
+                </p>
+                <p style="color: #94a3b8; margin-top: 1rem; font-style: italic;">
+                    Но вы уже сейчас можете зарезервировать доступ или присоединиться к нашей команде!
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ПРЕДЗАКАЗ - УПРОЩЕННАЯ ВЕРСИЯ -->
+    <section id="preorder" class="preorder">
+        <div class="preorder-card">
+            <div class="preorder-badge">РАННИЙ ДОСТУП 2026</div>
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: #f1f5f9;">Зарезервируйте доступ первым</h2>
+            <p style="color: #cbd5e1; font-size: 1.1rem; margin-bottom: 2rem;">
+                Напишите нам в Telegram по шаблону ниже. Мы добавим вас в список ожидания 
+                и свяжемся сразу при открытии доступа в 2026 году.
+            </p>
+            
+            <div style="text-align: center; margin: 2rem 0;">
+                <h3 style="color: #00b2ff; margin-bottom: 1rem;">📝 Шаблон для Telegram</h3>
+                <p style="color: #94a3b8; margin-bottom: 1.5rem;">
+                    Скопируйте этот текст и отправьте в Telegram @B0TForge
+                </p>
+                
+                <div class="telegram-template" id="telegramTemplate">
+🔔 <strong>ЗАЯВКА НА РАННИЙ ДОСТУП BOTFORGE 2026</strong>
+
+👤 <strong>Имя:</strong> <span class="template-placeholder">[Ваше имя]</span>
+📱 <strong>Контакты:</strong> <span class="template-placeholder">[Ваш Telegram или Email]</span>
+🏢 <strong>Компания/Проект:</strong> <span class="template-placeholder">[Название компании или проекта, если есть]</span>
+🎯 <strong>Интересует:</strong> <span class="template-placeholder">[Что хотите автоматизировать?]</span>
+📋 <strong>Описание задачи:</strong> 
+<span class="template-placeholder">[Подробно опишите, что нужно автоматизировать]</span>
+
+🚀 <strong>Жду запуска в 2026 году!</strong>
+                </div>
+                
+                <div style="margin: 2rem 0;">
+                    <button class="copy-button" onclick="copyTemplate()">
+                        📋 Скопировать шаблон
+                    </button>
+                    <a href="https://t.me/B0TForge" target="_blank" class="tg-button" style="display: inline-flex; padding: 12px 30px; font-size: 1.1rem;">
+                        ✨ Открыть Telegram
+                    </a>
+                </div>
+                
+                <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 1.5rem;">
+                    Замените тексты в <span style="color: #f59e0b;">[скобках]</span> на свои данные и отправьте в Telegram
+                </p>
+            </div>
+            
+            <div style="background: rgba(245, 158, 11, 0.1); padding: 1.5rem; border-radius: 15px; margin-top: 2rem;">
+                <h4 style="color: #f59e0b; margin-bottom: 0.5rem;">Что будет дальше?</h4>
+                <p style="color: #cbd5e1; font-size: 0.95rem;">
+                    1. Вы отправляете заявку в Telegram @B0TForge<br>
+                    2. Я добавляю вас в список ожидания<br>
+                    3. В 2026 году вы получите доступ в первую очередь<br>
+                    4. Специальные условия для ранних пользователей
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- КАРЬЕРА -->
+    <section id="career" class="career">
+        <div class="career-card">
+            <div class="career-icon">🚀</div>
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: #22c55e;">Стройте будущее с нами</h2>
+            <p style="color: #cbd5e1; font-size: 1.2rem; margin-bottom: 2rem;">
+                Мы создаем продукт, который изменит подход к автоматизации бизнеса. 
+                Присоединяйтесь к команде на этапе формирования и повлияйте на будущее индустрии.
+            </p>
+            
+            <div style="background: rgba(34, 197, 94, 0.1); padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                <h3 style="color: #22c55e; margin-bottom: 1rem;">Ищем таланты для 2026:</h3>
+                <ul style="color: #cbd5e1; text-align: left; padding-left: 1.5rem;">
+                    <li>Senior разработчики n8n / Make</li>
+                    <li>Архитекторы систем автоматизации</li>
+                    <li>Специалисты по интеграции API</li>
+                    <li>AI/ML инженеры для умных ботов</li>
+                    <li>Продукт-менеджеры в сфере SaaS</li>
+                    <li>DevOps для масштабируемых систем</li>
+                </ul>
+            </div>
+            
+            <p style="color: #f59e0b; margin: 1.5rem 0; font-weight: 600;">
+                💰 Участие в опционной программе для ключевых сотрудников
+            </p>
+            
+            <a href="https://t.me/B0TForge" target="_blank" class="join-button">
+                💼 Написать о работе в Telegram
+            </a>
+            
+            <p style="color: #94a3b8; margin-top: 2rem; font-size: 1rem;">
+                Пишите в Telegram @B0TForge с темой "Работа 2026". Присылайте CV, портфолио или просто расскажите о своем опыте.
+            </p>
+        </div>
+    </section>
+
+    <!-- КОНТАКТЫ -->
+    <section id="contacts" class="contacts">
+        <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: #f1f5f9;">Связь с основателями</h2>
+        <p style="color: #94a3b8; margin-bottom: 2rem; font-size: 1.1rem;">
+            На этапе разработки все вопросы решаются напрямую с командой основателей
+        </p>
+        
+        <div class="contact-card">
+            <h3 style="color: #00b2ff; font-size: 1.8rem; margin-bottom: 1.5rem;">📱 Единственный канал связи</h3>
+            <div style="font-size: 1.5rem; color: #f1f5f9; margin: 1.5rem 0; padding: 1.5rem; background: rgba(0, 136, 204, 0.1); border-radius: 10px; border: 1px solid rgba(0, 136, 204, 0.3);">
+                Telegram: @B0TForge
+            </div>
+            <p style="color: #cbd5e1; margin: 1rem 0;">
+                Отвечаем лично на все сообщения:
+            </p>
+            <ul style="color: #94a3b8; text-align: left; margin: 1rem 0; padding-left: 1.5rem;">
+                <li>Вопросы о раннем доступе и предзаказах</li>
+                <li>Обсуждение работы в команде</li>
+                <li>Партнерские предложения</li>
+                <li>Инвестиционные вопросы</li>
+                <li>Технические обсуждения</li>
+            </ul>
+            <a href="https://t.me/B0TForge" target="_blank" class="tg-button" style="margin-top: 2rem;">
+                💬 Написать в Telegram
+            </a>
+            <p style="color: #64748b; margin-top: 1.5rem; font-size: 0.9rem;">
+                Время ответа: обычно в течение 24 часов
+            </p>
+        </div>
+    </section>
+
+    <!-- ПОДВАЛ -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <div class="logo-icon">BF</div>
+                <div style="text-align: left;">
+                    <div class="logo-text">BOTFORGE</div>
+                    <div class="footer-tagline">SOCIAL BOT SOLUTIONS • ЗАПУСК В 2026</div>
+                </div>
+            </div>
+            
+            <p style="margin: 2rem 0; font-size: 1.1rem; color: #cbd5e1;">
+                Инновационная платформа автоматизации бизнеса • В активной разработке • Запуск запланирован на 2026 год
+            </p>
+            
+            <div style="margin: 1.5rem 0;">
+                <a href="#construction" style="color: #cbd5e1; text-decoration: none; margin: 0 1rem;">Дорожная карта</a> •
+                <a href="#preorder" style="color: #cbd5e1; text-decoration: none; margin: 0 1rem;">Ранний доступ</a> •
+                <a href="#career" style="color: #cbd5e1; text-decoration: none; margin: 0 1rem;">Карьера</a> •
+                <a href="#contacts" style="color: #cbd5e1; text-decoration: none; margin: 0 1rem;">Контакты</a>
+            </div>
+            
+            <div style="margin: 2rem 0;">
+                <a href="https://t.me/B0TForge" target="_blank" 
+                   style="color: #00b2ff; text-decoration: none; font-size: 1.2rem; font-weight: 600;">
+                    📱 Telegram: @B0TForge
+                </a>
+                <p style="color: #94a3b8; margin-top: 0.5rem;">
+                    Основатели отвечают лично на все вопросы
+                </p>
+            </div>
+            
+            <div class="copyright">
+                © 2024-2026 BotForge. Все права защищены.<br>
+                Сайт в режиме подготовки к запуску. Коммерческие услуги временно недоступны.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Копирование шаблона в буфер обмена
+        function copyTemplate() {
+            const template = document.getElementById('telegramTemplate');
+            const text = template.innerText;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                // Меняем текст кнопки на "Скопировано!"
+                const button = document.querySelector('.copy-button');
+                const originalText = button.innerHTML;
+                button.innerHTML = '✅ Скопировано!';
+                button.style.background = '#10b981';
+                button.style.color = 'white';
+                button.style.borderColor = '#10b981';
+                
+                // Возвращаем обратно через 2 секунды
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.style.background = '';
+                    button.style.color = '';
+                    button.style.borderColor = '';
+                }, 2000);
+                
+                // Показываем всплывающее уведомление
+                showNotification('Шаблон скопирован в буфер обмена!');
+            }).catch(err => {
+                console.error('Ошибка копирования:', err);
+                showNotification('Ошибка копирования. Скопируйте текст вручную.', true);
+            });
+        }
+        
+        // Показать уведомление
+        function showNotification(message, isError = false) {
+            // Создаем элемент уведомления
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: ${isError ? '#ef4444' : '#10b981'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                z-index: 9999;
+                font-weight: 600;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            // Удаляем через 3 секунды
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+        
+        // Добавляем стили для анимаций уведомлений
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Плавная прокрутка
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Анимация появления
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Наблюдаем за элементами
+        document.querySelectorAll('.warning-card, .preorder-card, .career-card, .contact-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.8s ease';
+            observer.observe(el);
+        });
+        
+        // Эффект для кнопок
+        document.querySelectorAll('.cta-button, .tg-button, .join-button').forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px) scale(1.05)';
+            });
+            
+            btn.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+        
+        // Показываем инструкцию при загрузке
+        window.addEventListener('load', function() {
+            console.log('🚀 BotForge 2026 - Готовим революцию в автоматизации');
+            console.log('📅 Запуск запланирован на 2026 год');
+            console.log('📱 Telegram для заявок: @B0TForge');
+            console.log('💼 Присоединяйтесь к команде создателей!');
+            
+            // Показываем всплывающее уведомление о том, как оставить заявку
+            setTimeout(() => {
+                showNotification('🎯 Нажмите "Забронировать ранний доступ" чтобы увидеть шаблон заявки!');
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
